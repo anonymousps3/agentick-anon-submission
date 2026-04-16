@@ -1,0 +1,121 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# Project specific
+*.log
+*.mp4
+results*/
+checkpoints/
+wandb/
+leaderboard_site/
+/site/
+trajectories/
+data/
+test_output/
+*.pkl
+*.h5
+benchmark_results/
+random_baseline_results/
+paper_figures/
+notebooks/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+uv.lock
+
+.claude
+.config/
+.triton/
+
+# Generated artifacts
+models/
+sft_output/
+sft_model/
+
+.env
+
+# Internal maintainer scripts (keep public scripts, ignore private ones)
+scripts/__pycache__/
+
+# Debug/results notebooks (local only)
+examples/debug_results.ipynb
+examples/human_results.ipynb
+
+# Generated gallery videos — hosted on HuggingFace (huggingface.co/rogercc/agentick-gallery)
+# Regenerate locally with: scripts/record_oracle_gallery.py
+# Upload with: huggingface-cli upload rogercc/agentick-gallery docs/showcase/videos/iso/ iso/
+docs/showcase/videos/
+
+# Logs
+logs/
+slurm_logs/
+
+# Local SLURM helper scripts
+examples/experiments/slurm/find_missing.sh
+examples/data_and_finetuning/submit_collect_trajectories.sbatch
+examples/data_and_finetuning/submit_sft.sbatch
+# Cost report script (local only)
+cost_report.sh
+# Temp debug scripts
+check_openai_credits.py
+check_results.sh
+generate_relaunches.py
+relaunch_scripts/
+launch_batch.sh
+
+# Gemini 3.1 Flash Lite per-category configs (local only, RPD-split runs)
+examples/experiments/configs/gemini_31_flash_lite_*
+
+# Haiku configs (Azure credentials, local only)
+examples/experiments/configs/haiku_*
+
+# Cluster/SLURM infrastructure (private)
+cluster_manager/
+slurm_account_template.sbatch
+*.sbatch
+
+# NVIDIA cache
+.nv/

@@ -1,0 +1,57 @@
+site_name: Agentick
+site_description: Universal benchmark for evaluating AI agents
+site_url: https://anonymousps3.github.io/agentick-anon-submission/
+
+theme:
+  name: material
+  palette:
+    scheme: default
+    primary: indigo
+    accent: indigo
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+nav:
+  - Home: blog/index.md
+  - Quickstart: getting_started/quickstart.md
+  - Tasks: tasks.md
+  - Observations: concepts/observations.md
+  - Agents:
+    - RL Agents: agents/rl_agents.md
+    - LLM / VLM Agents: agents/llm_agents.md
+    - Fine-Tuning: agents/finetuning.md
+  - Experiments: experiments.md
+  - Leaderboard: leaderboard.md
+  - Architecture: concepts/architecture.md
+  - CLI: cli.md
+
+plugins:
+  - search
+  - blog:
+      blog_dir: blog
+      post_date_format: long
+      post_url_format: "{slug}"
+      post_excerpt: optional
+      archive: false
+      categories: false
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - toc:
+      permalink: true
