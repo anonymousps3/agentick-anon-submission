@@ -1,0 +1,87 @@
+================================================================================
+CROISSANT VALIDATION REPORT
+================================================================================
+Generated:  2026-05-02T06:03:26.473989+00:00
+
+Validators run:
+  1. mlcroissant validate (local, official MLCommons CLI) — passed cleanly.
+  2. JoaquinVanschoren/croissant-checker (the validator the NeurIPS
+     2026 Datasets & Benchmarks CFP FAQ links to) — full report below.
+
+Files validated:
+  - croissant/agentick-oracle-trajectories-120k.croissant.json
+  - croissant/agentick-oracle-trajectories-250k.croissant.json
+  - croissant/agentick-oracle-trajectories-500k.croissant.json
+
+To reproduce:
+  pip install mlcroissant gradio_client
+  for f in croissant/*.croissant.json; do mlcroissant validate --jsonld "$f"; done
+  python -c 'from gradio_client import Client, handle_file; c = Client("JoaquinVanschoren/croissant-checker"); print(c.predict(file=handle_file("croissant/<file>"), api_name="/on_validate")[2])'
+
+Loaded as API: https://joaquinvanschoren-croissant-checker.hf.space
+
+================================================================================
+FILE: agentick-oracle-trajectories-120k.croissant.json
+================================================================================
+# CROISSANT VALIDATION REPORT
+================================================================================
+## VALIDATION RESULTS
+--------------------------------------------------------------------------------
+Starting validation for file: agentick-oracle-trajectories-120k.croissant.json
+### JSON Format Validation
+✓
+The file is valid JSON.
+### Croissant Schema Validation
+✓
+The dataset passes Croissant validation.
+### Records Generation Test
+✓
+Record set 'default_splits' passed validation.
+Record set 'default' passed validation.
+### Responsible AI Metadata
+✓
+All required Responsible AI metadata fields are present.
+
+================================================================================
+FILE: agentick-oracle-trajectories-250k.croissant.json
+================================================================================
+# CROISSANT VALIDATION REPORT
+================================================================================
+## VALIDATION RESULTS
+--------------------------------------------------------------------------------
+Starting validation for file: agentick-oracle-trajectories-250k.croissant.json
+### JSON Format Validation
+✓
+The file is valid JSON.
+### Croissant Schema Validation
+✓
+The dataset passes Croissant validation.
+### Records Generation Test
+✓
+Record set 'default_splits' passed validation.
+Record set 'default' passed validation.
+### Responsible AI Metadata
+✓
+All required Responsible AI metadata fields are present.
+
+================================================================================
+FILE: agentick-oracle-trajectories-500k.croissant.json
+================================================================================
+# CROISSANT VALIDATION REPORT
+================================================================================
+## VALIDATION RESULTS
+--------------------------------------------------------------------------------
+Starting validation for file: agentick-oracle-trajectories-500k.croissant.json
+### JSON Format Validation
+✓
+The file is valid JSON.
+### Croissant Schema Validation
+✓
+The dataset passes Croissant validation.
+### Records Generation Test
+✓
+Record set 'default_splits' passed validation.
+Record set 'default' passed validation.
+### Responsible AI Metadata
+✓
+All required Responsible AI metadata fields are present.

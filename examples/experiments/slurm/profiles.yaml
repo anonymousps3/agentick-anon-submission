@@ -1,0 +1,76 @@
+cluster:
+  partition: long  # default partition (overridden by per-profile partition)
+  conda_env: ""   # unused, uv manages the venv
+  modules: []
+  log_dir: slurm_logs
+
+# Per-profile partition overrides the global cluster.partition when set.
+# Since jobs are split per (task, difficulty), times are per single run.
+profiles:
+  ppo:              { cpus: 8,  gres: "gpu:1", mem: "50G",  time: "05:59:00" }
+  local_1g_6h:      { cpus: 8,  gres: "gpu:1", mem: "50G",  time: "05:59:00", partition: "long" }
+  local_1g_12h:     { cpus: 8,  gres: "gpu:1", mem: "50G",  time: "11:59:00", partition: "long" }
+  local_4g_6h:      { cpus: 32, gres: "gpu:4", mem: "128G", time: "05:59:00", partition: "lab-real" }
+  local_4g_12h:     { cpus: 32, gres: "gpu:4", mem: "128G", time: "11:59:00", partition: "lab-real" }
+  api_6h:           { cpus: 4,  gres: "",      mem: "16G",  time: "05:59:00", partition: "long-cpu" }
+  api_12h:          { cpus: 4,  gres: "",      mem: "16G",  time: "11:59:00", partition: "long-cpu" }
+  api_24h:          { cpus: 8,  gres: "",      mem: "32G",  time: "23:59:00", partition: "lab-real" }
+  baseline:         { cpus: 4,  gres: "",      mem: "8G",   time: "05:59:00" }
+
+# Classification rules — first match wins.
+# Order matters: more specific patterns MUST come before broader counterparts.
+# Rule of thumb: markov harness → 6h, reasoner harness → 12h.
+classification:
+  # PPO
+  - { pattern: "ppo_*",                            profile: ppo }
+
+  # Qwen3.5-4B img configs
+  - { pattern: "qwen35_4b_img_markov*",             profile: local_1g_6h }
+  - { pattern: "qwen35_4b_img_reasoner*",           profile: local_1g_12h }
+
+  # Qwen3.5-0.8B ascii/lang configs
+  - { pattern: "qwen35_0_8b_*_markov*",             profile: local_1g_6h }
+  - { pattern: "qwen35_0_8b_*_reasoner*",           profile: local_1g_12h }
+
+  # Qwen3.5-2B ascii/lang configs
+  - { pattern: "qwen35_2b_*_markov*",               profile: local_1g_6h }
+  - { pattern: "qwen35_2b_*_reasoner*",             profile: local_1g_12h }
+
+  # Qwen3.5-4B SFT configs
+  - { pattern: "qwen35_4b_sft_*_markov*",           profile: local_1g_6h }
+  - { pattern: "qwen35_4b_sft_*_reasoner*",         profile: local_1g_12h }
+
+  # Qwen3.5-4B ascii/lang configs
+  - { pattern: "qwen35_4b_*_markov*",               profile: local_1g_6h }
+  - { pattern: "qwen35_4b_*_reasoner*",             profile: local_1g_12h }
+
+  # Qwen3.5-9B ascii/lang configs
+  - { pattern: "qwen35_9b_*_markov*",               profile: local_1g_6h }
+  - { pattern: "qwen35_9b_*_reasoner*",             profile: local_1g_12h }
+
+  # Qwen3-4B ascii/lang configs
+  - { pattern: "qwen3_4b_*_markov*",                profile: local_1g_6h }
+  - { pattern: "qwen3_4b_*_reasoner*",              profile: local_1g_12h }
+
+  # Qwen3-VL-4B
+  - { pattern: "qwen3_vl4b*markov*",                profile: local_1g_6h }
+  - { pattern: "qwen3_vl4b*reasoner*",              profile: local_1g_12h }
+  - { pattern: "qwen3_vl4b*",                       profile: local_1g_6h }
+
+  # GPT-5-mini configs
+  - { pattern: "gpt5mini_*_markov*",                profile: api_6h }
+  - { pattern: "gpt5mini_*_reasoner*",              profile: api_12h }
+
+  # Gemini Flash configs
+  - { pattern: "gemini_31_flash_lite_*_markov*",    profile: api_6h }
+  - { pattern: "gemini_31_flash_lite_*_reasoner*",  profile: api_12h }
+  - { pattern: "gemini_flash_lite_*_markov*",       profile: api_6h }
+  - { pattern: "gemini_flash_lite_*_reasoner*",     profile: api_12h }
+
+  # Haiku configs
+  - { pattern: "haiku_*_reasoner*",                  profile: api_24h }
+  - { pattern: "haiku_*_markov*",                    profile: api_24h }
+
+  # Baselines
+  - { pattern: "random_*",                          profile: baseline }
+  - { pattern: "oracle_*",                          profile: baseline }

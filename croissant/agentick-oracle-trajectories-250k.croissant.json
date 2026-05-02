@@ -1,0 +1,314 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "arrayShape": "cr:arrayShape",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "containedIn": "cr:containedIn",
+    "cr": "http://mlcommons.org/croissant/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataBiases": "cr:dataBiases",
+    "dataCollection": "cr:dataCollection",
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isArray": "cr:isArray",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "personalSensitiveInformation": "cr:personalSensitiveInformation",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "samplingRate": "cr:samplingRate",
+    "equivalentProperty": "cr:equivalentProperty"
+  },
+  "@type": "sc:Dataset",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "repo",
+      "name": "repo",
+      "description": "The Hugging Face git repository.",
+      "contentUrl": "https://huggingface.co/datasets/anon-paper-submission/agentick-oracle-trajectories-250k/tree/refs%2Fconvert%2Fparquet",
+      "encodingFormat": "git+https",
+      "sha256": "https://github.com/mlcommons/croissant/issues/80"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "parquet-files-for-config-default",
+      "containedIn": {
+        "@id": "repo"
+      },
+      "encodingFormat": "application/x-parquet",
+      "includes": "default/*/*.parquet"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "dataType": "cr:Split",
+      "key": {
+        "@id": "default_splits/split_name"
+      },
+      "@id": "default_splits",
+      "name": "default_splits",
+      "description": "Splits for the default config.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "default_splits/split_name",
+          "dataType": "sc:Text"
+        }
+      ],
+      "data": [
+        {
+          "default_splits/split_name": "train"
+        },
+        {
+          "default_splits/split_name": "test"
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "default",
+      "description": "anon-paper-submission/agentick-oracle-trajectories-250k - 'default' subset\n\nAdditional information:\n- 2 splits: train, test",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "default/split",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "fileProperty": "fullpath"
+            },
+            "transform": {
+              "regex": "default/(?:partial-)?(train|test)/.+parquet$"
+            }
+          },
+          "references": {
+            "field": {
+              "@id": "default_splits/split_name"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/task",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "task"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/episode_id",
+          "dataType": "cr:Int32",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "episode_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/difficulty",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "difficulty"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/step",
+          "dataType": "cr:Int32",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "step"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/ascii_render",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "ascii_render"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/language_render",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "language_render"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/action_name",
+          "dataType": "sc:Text",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "action_name"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/action_int",
+          "dataType": "cr:Int32",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "action_int"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/reward",
+          "dataType": "cr:Float32",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "reward"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "default/done",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileSet": {
+              "@id": "parquet-files-for-config-default"
+            },
+            "extract": {
+              "column": "done"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "name": "agentick-oracle-trajectories-250k",
+  "description": "Per-step oracle trajectories from the Agentick benchmark, a procedurally generated 2D gridworld suite for evaluating AI agents on navigation, memory, planning, reasoning, generalization, and multi-agent tasks. Each row records a single environment step taken by a deterministic task-specific oracle policy: the task name, episode/step index, difficulty level, ASCII and natural-language renderings of the observation, the action taken (name + integer index), the scalar reward, and a terminal flag. Train and test splits use disjoint deterministic seeds drawn from agentick.leaderboard.seeds.generate_task_seeds and are fully reproducible from the open-source codebase. This is the 250k-step variant (251,076 train rows, 252,123 test rows).",
+  "alternateName": [
+    "anon-paper-submission/agentick-oracle-trajectories-250k"
+  ],
+  "creator": {
+    "@type": "Person",
+    "name": "Anonymous Author"
+  },
+  "keywords": [
+    "reinforcement-learning",
+    "imitation-learning",
+    "behavior-cloning",
+    "benchmark",
+    "ai-agents",
+    "gridworld",
+    "synthetic",
+    "oracle-trajectories"
+  ],
+  "url": "https://huggingface.co/datasets/anon-paper-submission/agentick-oracle-trajectories-250k",
+  "license": "https://spdx.org/licenses/MIT.html",
+  "citeAs": "@software{agentick2025, title={Agentick: Universal Benchmark for AI Agents}, author={Anonymous Author}, year={2025}, url={https://github.com/anonymousps3/agentick-anon-submission}}",
+  "version": "1.0.0",
+  "datePublished": "2026-04-16",
+  "sameAs": "https://github.com/anonymousps3/agentick-anon-submission",
+  "rai:dataCollection": "Synthetic. Trajectories are generated by running deterministic task-specific oracle policies (hand-coded reference solvers) against Gymnasium-compatible procedurally-generated Agentick environments. Each episode is seeded with a deterministic value from agentick.leaderboard.seeds.generate_task_seeds; train and test splits use disjoint seed pools. At each step the environment's ASCII-grid and natural-language renderings, the oracle's action, and the resulting reward and terminal flag are recorded. No human subjects, no scraping, no third-party data, no PII.",
+  "rai:dataCollectionType": "Synthetic Data Generation",
+  "rai:dataCollectionTimeframe": {
+    "@type": "sc:DateTime",
+    "@value": "2026-04-16"
+  },
+  "rai:dataPreprocessingProtocol": "None beyond serialization: trajectory rows are written to Parquet with the schema declared above. Renders are stored as strings, actions as integer indices and human-readable names, rewards as float32, and terminal flags as booleans. No filtering, deduplication, balancing, or augmentation is applied. The complete preprocessing pipeline is examples/data_and_finetuning/collect_oracle_trajectories.py in the code repository.",
+  "rai:dataAnnotationProtocol": "Not applicable. Action labels are produced by deterministic oracle policies, not human annotators. Each task has exactly one oracle, so every row's action is fully determined by the task, environment seed, and step index \u2014 no annotation, adjudication, or inter-annotator agreement is involved.",
+  "rai:dataAnnotationPlatform": "Not applicable \u2014 no human annotators.",
+  "rai:dataAnnotationAnalysis": "Not applicable \u2014 no human annotators.",
+  "rai:annotationsPerItem": "Not applicable \u2014 no human annotators.",
+  "rai:annotatorDemographics": "Not applicable. This is a fully synthetic dataset produced by deterministic algorithmic policies; no human annotators were involved at any stage.",
+  "rai:machineAnnotationTools": "Per-task oracle policies in agentick.oracles (open-source, see code repository). Each oracle is a hand-implemented reference solver specific to one task family (e.g. shortest-path BFS for navigation tasks, dependency-respecting plan execution for key-door puzzles).",
+  "rai:personalSensitiveInformation": "None. The dataset is procedurally generated synthetic content with no personal, demographic, biometric, location, financial, or otherwise sensitive information about any individual. No identifying data is collected or derivable.",
+  "rai:dataBiases": "Procedural-generation biases: the distribution over maze layouts, object placements, and difficulty parameters reflects the design choices of agentick.generation rather than a natural distribution. Behavioral bias: every action label comes from a single oracle per task, so models trained on this data will inherit oracle-specific tie-breaking choices (e.g. preferred direction in symmetric shortest-path situations). No demographic or human-population biases are present, because no human-population data is present.",
+  "rai:dataLimitations": "(1) Procedurally generated 2D gridworld trajectories \u2014 not representative of natural language, real-world imagery, or embodied robotics. (2) Optimal/near-optimal demonstrations only; the dataset contains no failure, exploration, or sub-optimal-policy data. (3) ASCII and language renderings follow fixed templates; they are not natural-language descriptions written by humans. (4) Generalization claims should be evaluated against the held-out test split (disjoint seeds), not held-out rows of the train split, since within-episode rows are highly correlated.",
+  "rai:dataReleaseMaintenancePlan": "Datasets are versioned by commit SHA on the HuggingFace Hub and the exact regeneration pipeline is in the open-source code repository (scripts/generate_datasets.sh + examples/data_and_finetuning/collect_oracle_trajectories.py). Anyone can reproduce or extend the data deterministically. No active maintenance commitment is made beyond the paper's review period; the codebase is sufficient for the community to maintain or evolve the data.",
+  "rai:dataUseCases": "Imitation learning / behavior cloning baselines for the Agentick benchmark; supervised fine-tuning of LLMs and VLMs on agentic decision-making tasks; offline reinforcement learning pretraining; studying sample efficiency of demonstration-based learners; ablations on observation modality (ASCII vs natural-language render). The dataset is intended exclusively for research on synthetic agent benchmarks.",
+  "rai:dataSocialImpact": "Low risk. The dataset enables research on agent learning in synthetic gridworld environments and has no direct mapping to real-world deployment scenarios. The primary misuse risk is benchmark gaming (training on test-split seeds), which is mitigated by the disjoint-seed train/test partition and by the leaderboard's use of further held-out evaluation seeds. No dual-use, safety, or fairness concerns are raised by the data itself.",
+  "rai:hasSyntheticData": true,
+  "prov:wasGeneratedBy": {
+    "@type": "prov:Activity",
+    "prov:label": "Oracle trajectory collection",
+    "prov:description": "Each row was generated by running a deterministic per-task oracle policy in a procedurally-generated Agentick environment and recording the resulting (observation, action, reward, done) tuple. Train and test splits use disjoint deterministic seeds from agentick.leaderboard.seeds.generate_task_seeds.",
+    "prov:used": "https://github.com/anonymousps3/agentick-anon-submission/blob/main/examples/data_and_finetuning/collect_oracle_trajectories.py"
+  }
+}

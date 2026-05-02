@@ -1,0 +1,141 @@
+[project]
+name = "agentick"
+version = "0.1.0"
+description = "Universal benchmark for evaluating generally capable AI agents"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = {text = "MIT"}
+authors = [
+    {name = "Agentick Team"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "gymnasium>=1.0",
+    "numpy>=1.24",
+    "pygame>=2.5",
+    "Pillow>=10.0",
+    "pydantic>=2.0",
+    "rich>=13.0",
+    "scipy",
+    "pyyaml",
+    "python-dotenv",
+    "tqdm",
+    "jinja2>=3.1",
+]
+
+[project.scripts]
+agentick = "agentick.leaderboard.cli:main"
+
+[project.optional-dependencies]
+# Core RL training
+rl = [
+    "torch>=2.0",
+    "stable-baselines3>=2.0",
+    "tensorboard",
+]
+# LLM/VLM agents
+llm = [
+    "openai>=1.0",
+    "google-genai>=1.66.0",
+    "transformers>=4.40",
+    "torch>=2.0",
+    "accelerate",
+]
+# Fast local inference with vLLM
+vllm = [
+    "vllm>=0.12.0",
+]
+# Fine-tuning
+finetune = [
+    "trl>=0.8",
+    "peft",
+    "datasets",
+]
+# Experiment tracking
+tracking = [
+    "wandb>=0.17",
+]
+# Visualization & plotting
+viz = [
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "plotly>=5.0",
+]
+# Web application
+webapp = [
+    "flask>=3.1",
+]
+# Documentation
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.0",
+    "mkdocstrings[python]",
+]
+# Everything
+all = [
+    "agentick[rl,llm,vllm,finetune,tracking,viz,webapp,docs]",
+]
+
+[tool.uv]
+# vLLM >=0.12 pins transformers<5, but we need transformers>=5.0 for Qwen3.5
+# model type support.  The override forces uv to ignore vLLM's upper bound.
+override-dependencies = [
+    "transformers>=5.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["agentick"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"agentick/rendering/tiles" = "agentick/rendering/tiles"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+timeout = 60
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"examples/debug/_shared.py" = ["E501"]
+"agentick/human/webapp.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-timeout>=2.2",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pre-commit>=3.0",
+]

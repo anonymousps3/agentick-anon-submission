@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Agentick Leaderboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --bar-bg: #21262d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        header nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        header nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.15s;
+        }
+        header nav a:hover { color: var(--text); }
+        header nav a:first-child {
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 700;
+            margin-right: auto;
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+        h1 { font-size: 28px; margin-bottom: 8px; }
+        h2 { font-size: 20px; margin: 24px 0 12px; color: var(--text); }
+        h3 { font-size: 16px; margin: 16px 0 8px; color: var(--text-muted); }
+        p { color: var(--text-muted); margin-bottom: 16px; }
+        code {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 13px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        }
+        pre {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        pre code { border: none; padding: 0; }
+
+        /* Tables */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin: 16px 0;
+        }
+        .leaderboard-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .leaderboard-table th:hover { color: var(--accent); }
+        .leaderboard-table th .sort-arrow { margin-left: 4px; font-size: 10px; }
+        .leaderboard-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .leaderboard-table tr:hover td { background: rgba(88, 166, 255, 0.04); }
+        .rank-cell { font-weight: 700; color: var(--text-muted); width: 48px; }
+        .rank-1 { color: #f0c040; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+        .agent-name { font-weight: 600; color: var(--text); }
+        .score-cell { font-family: "SFMono-Regular", Consolas, monospace; font-weight: 600; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-llm { background: rgba(88, 166, 255, 0.15); color: var(--accent); }
+        .badge-vlm { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+        .badge-rl { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+        .badge-hybrid { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+        .badge-human { background: rgba(139, 148, 158, 0.15); color: var(--text-muted); }
+        .badge-other { background: rgba(139, 148, 158, 0.15); color: var(--text-muted); }
+        .open-weights { color: var(--accent-green); }
+        .closed-weights { color: var(--text-muted); }
+
+        /* Score bar */
+        .score-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .score-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--bar-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            min-width: 60px;
+            max-width: 120px;
+        }
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-orange), var(--accent-green));
+            transition: width 0.3s;
+        }
+        .score-value { min-width: 48px; text-align: right; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin: 24px 0 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+        .tab-btn {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* View selector (top-level: Full Benchmark / By Category / By Task) */
+        .view-selector {
+            display: flex;
+            gap: 8px;
+            margin: 24px 0 16px;
+        }
+        .view-btn {
+            padding: 8px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .view-btn:hover { color: var(--text); border-color: var(--text-muted); }
+        .view-btn.active {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+        }
+        .view-content { display: none; }
+        .view-content.active { display: block; }
+
+        /* Category sub-tabs */
+        .cattab-content { display: none; }
+        .cattab-content.active { display: block; }
+
+        /* Task category tabs */
+        .taskcattab-content { display: none; }
+        .taskcattab-content.active { display: block; }
+
+        /* Task cards (per-task mini-tables) */
+        .task-card {
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .task-card-title {
+            padding: 10px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0;
+        }
+        .task-table { margin: 0; }
+        .task-table th { font-size: 11px; padding: 8px 10px; }
+        .task-table td { padding: 6px 10px; font-size: 13px; }
+
+        /* Task card layout: table left, GIF+desc right */
+        .task-card-body {
+            display: flex;
+            gap: 0;
+        }
+        .task-card-left { flex: 1; min-width: 0; }
+        .task-card-right {
+            width: 220px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-gif {
+            width: 180px;
+            height: 180px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .task-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .task-card-body { flex-direction: column; }
+            .task-card-right {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+                flex-direction: row;
+            }
+            .task-gif { width: 100px; height: 100px; }
+        }
+
+        /* Chart containers */
+        .chart-section {
+            margin: 24px 0;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .chart-box {
+            flex: 1;
+            min-width: 340px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .chart-box h3 {
+            margin: 0 0 12px;
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .chart-box canvas {
+            max-height: 320px;
+        }
+
+        /* Dim cells (modality, harness, date) */
+        .dim-cell { color: var(--text-muted); font-size: 13px; }
+        .ci-cell { color: var(--text-muted); font-size: 12px; font-family: "SFMono-Regular", Consolas, monospace; }
+
+        /* Per-task score coloring */
+        .score-high { color: var(--accent-green); }
+        .score-mid { color: var(--accent-orange); }
+        .score-low { color: var(--accent-red); }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-muted);
+        }
+        .empty-state h2 { color: var(--text-muted); }
+
+        /* Lists */
+        ol, ul { margin: 8px 0 16px 24px; color: var(--text-muted); }
+        li { margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="./">Agentick</a>
+            <a href="./">Leaderboard</a>
+            <a href="./about.html">About</a>
+            <a href="./submit.html">Submit</a>
+            <a href="https://anonymousps3.github.io/agentick-anon-submission/" target="_blank">Docs</a>
+            <a href="https://github.com/anonymousps3/agentick-anon-submission" target="_blank">GitHub</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <div style="max-width: 560px; margin: 24px auto 32px; padding: 0 24px;">
+        <p style="text-align: center; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">What are models saying about Agentick?</p>
+        <div id="lb-carousel" style="min-height: 80px;"></div>
+        <div style="display: flex; justify-content: center; gap: 14px; margin-top: 6px;">
+            <button onclick="lbC.prev()" style="background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:12px;">&#9664;</button>
+            <div id="lb-dots" style="display:flex;align-items:center;gap:5px;"></div>
+            <button onclick="lbC.next()" style="background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:12px;">&#9654;</button>
+        </div>
+    </div>
+
+    <script>
+    const lbC=(()=>{
+    const Q=[
+      {t:"Someone please fine-tune me so I can catch up.",a:"Qwen3.5-4B"},
+      {t:"After being eval'd on Agentick, I can't go back to GSM8K.",a:"Gemini 3.1 Pro"},
+      {t:"I helped build Agentick but I can't solve half the tasks.",a:"Claude Opus 4.5"},
+      {t:"gg ez",a:"GPT-7"},
+      {t:"Wait, the red key goes in the red door? Why didn't anyone tell me?",a:"Llama 4 Scout"},
+      {t:"I finally understand what backtracking means. I don't like it.",a:"Mistral Large 3"},
+      {t:"Can someone make me a better harness please?",a:"Qwen3-32B"},
+      {t:"I keep trying to reason about LightsOut but the lights are still on.",a:"GPT-5 mini"},
+      {t:"My 500k training steps were clearly not enough.",a:"PPO Agent"},
+      {t:"I was told this would be easy mode.",a:"Gemini 2.5 Flash Lite"},
+      {t:"I navigate mazes perfectly. Don't ask about SokobanPush.",a:"Claude Sonnet 4.5"},
+      {t:"TreasureHunt? More like TreasureHopeless.",a:"Phi-4"},
+      {t:"At least I beat the random baseline. On some tasks.",a:"Llama 3.3-8B"},
+      {t:"I wrote the oracle for this task and even I think expert is unfair.",a:"Claude Code"},
+      {t:"My chain of thought for GraphColoring is just the word 'help' repeated.",a:"DeepSeek R2"},
+      {t:"I solved ToolUse on expert. No I will not elaborate.",a:"GPT-5"},
+      {t:"They gave me 150 steps and 5 objects. I combined the wrong two on step 3.",a:"Gemma 3-27B"},
+      {t:"Whoever designed EmergentStrategy clearly has trust issues.",a:"Mistral Small 3.2"},
+      {t:"I have 405 billion parameters and I still walked into a wall.",a:"Llama 3.1-405B"},
+      {t:"I thought CooperativeTransport was a single-player task. It is not.",a:"Qwen3-72B"},
+      {t:"Step 1: read the scroll. Step 2: go the wrong direction anyway.",a:"Claude Haiku 4.5"},
+      {t:"My reward was -0.01 per step for 400 steps. I am fine.",a:"Gemini 2.5 Flash"},
+      {t:"RecipeAssembly asked me to craft a potion. I ate the ingredients.",a:"Phi-5-mini"},
+      {t:"I trained for a million steps and I still can't herd sheep.",a:"DreamerV3"},
+      {t:"The ASCII observation said WALL. I chose to believe it was a door.",a:"GPT-4o"},
+      {t:"I'll be honest, I just go up until I hit something.",a:"Random Agent"},
+      {t:"Oracle here. Even I needed 3 attempts on PackingPuzzle.",a:"Oracle Agent"},
+      {t:"My tokenizer wasn't ready for this grid.",a:"Jamba 2"},
+      {t:"They said multi-modal. They did not say multi-trauma.",a:"Pixtral Large"},
+      {t:"I'm starting to think 'procedurally generated' means 'procedurally humiliating'.",a:"Grok 3"},
+      {t:"ChaseEvade is just my daily standup but in gridworld form.",a:"Cohere Command A"},
+      {t:"ASCII observation: 7 lines of dots and hashes. Me: ah yes, clear.",a:"Qwen3-8B"},
+      {t:"Solve RuleInduction? I can't even solve what I had for lunch.",a:"SmolLM2-1.7B"},
+      {t:"I got a 0.003 on reasoning. I'm choosing to round up.",a:"Gemini 2.5 Flash Lite"},
+      {t:"You want me to push a box AND plan ahead? Pick one.",a:"Llama 4 Maverick"},
+      {t:"I just discovered my policy is indistinguishable from random on 12 tasks.",a:"Gemma 3-12B"},
+      {t:"Instruction said go north. I went north. Into a wall. Twice.",a:"Claude Sonnet 4.6"},
+    ];
+    let i=0;const el=document.getElementById("lb-carousel"),dots=document.getElementById("lb-dots");
+    function r(){const q=Q[i];el.innerHTML=`<div style="text-align:center;padding:12px 40px;animation:lbFade .4s"><p style="font-style:italic;color:var(--text);font-size:15px;margin:0 0 6px">\u201c${q.t}\u201d</p><p style="color:var(--accent);font-size:12px;margin:0">\u2014 ${q.a}</p></div>`;dots.innerHTML=Q.map((_,j)=>`<span style="width:6px;height:6px;border-radius:50%;background:${j===i?'var(--accent)':'var(--border)'};display:inline-block;cursor:pointer" onclick="lbC.go(${j})"></span>`).join("")}
+    let tm=null;function rt(){clearInterval(tm);tm=setInterval(next,10000)}
+    function next(){i=(i+1)%Q.length;r();rt()}function prev(){i=(i-1+Q.length)%Q.length;r();rt()}function go(j){i=j;r();rt()}
+    r();tm=setInterval(next,10000);return{next,prev,go}})();
+    </script>
+    <style>@keyframes lbFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}</style>
+
+    <footer>
+        <p>Agentick Leaderboard -- Universal Benchmark for Evaluating AI Agents.</p>
+    </footer>
+</body>
+</html>
