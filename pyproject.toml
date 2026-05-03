@@ -81,9 +81,9 @@ docs = [
     "mkdocs-material>=9.0",
     "mkdocstrings[python]",
 ]
-# Everything
+# Everything (excluding vllm which requires CUDA build tools)
 all = [
-    "agentick[rl,llm,vllm,finetune,tracking,viz,webapp,docs]",
+    "agentick[rl,llm,finetune,tracking,viz,webapp,docs]",
 ]
 
 [tool.uv]

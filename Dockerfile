@@ -76,8 +76,8 @@ COPY . .
 ENV UV_PYTHON=/usr/bin/python3.12
 ENV UV_SYSTEM_PYTHON=1
 
-# Sync all extras (rl, llm, vllm, finetune, tracking, viz, webapp, docs) + dev
-RUN uv sync --extra all --group dev --no-progress
+# Sync all extras + vllm (GPU container has CUDA toolkit) + dev
+RUN uv sync --extra all --extra vllm --group dev --no-progress
 
 
 

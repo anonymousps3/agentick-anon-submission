@@ -39,7 +39,7 @@ Universal benchmark for evaluating AI agents. Train and evaluate any agent type 
 The fastest way to explore Agentick is the **interactive webapp** — play tasks yourself and browse all observation modalities:
 
 ```bash
-git clone https://github.com/anonymousps3/agentick-anon-submission.git && cd agentick
+git clone https://github.com/anonymousps3/agentick-anon-submission.git && cd agentick-anon-submission
 uv sync --extra all
 uv run python -m agentick.human.webapp   # Opens http://localhost:5000
 ```
@@ -66,7 +66,7 @@ env.close()
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh   # Install uv
 git clone https://github.com/anonymousps3/agentick-anon-submission.git
-cd agentick
+cd agentick-anon-submission
 uv sync --extra all
 uv run agentick --version
 ```
@@ -77,12 +77,12 @@ uv run agentick --version
 uv sync                     # Core only (gymnasium, numpy, pygame, Pillow)
 uv sync --extra rl          # RL training (torch, stable-baselines3)
 uv sync --extra llm         # LLM agents (openai, transformers, google-genai)
-uv sync --extra vllm        # vLLM serving
+uv sync --extra vllm        # vLLM serving (requires CUDA toolkit + cmake)
 uv sync --extra finetune    # Fine-tuning (trl, peft, datasets)
 uv sync --extra tracking    # Experiment tracking (wandb)
 uv sync --extra viz         # Visualization (matplotlib, seaborn, plotly)
 uv sync --extra webapp      # Human play webapp (flask)
-uv sync --extra all         # Everything
+uv sync --extra all         # Everything (except vllm)
 ```
 
 ## Render Modes

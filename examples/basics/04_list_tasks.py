@@ -17,8 +17,8 @@ def main():
         print(f"  - {task}")
     print()
 
-    # Filter by capability
-    capabilities = ["navigation", "memory", "reasoning", "skill", "control", "combinatorial"]
+    # Filter by capability tag
+    capabilities = ["navigation", "planning", "reasoning", "memory", "multi_agent", "exploration"]
 
     for capability in capabilities:
         tasks = list_tasks(capability=capability)

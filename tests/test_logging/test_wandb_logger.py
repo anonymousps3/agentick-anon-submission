@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import importlib
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from agentick.training.logger import MultiBackendLogger
+
+_WANDB_AVAILABLE = importlib.util.find_spec("wandb") is not None
 
 
 class TestWandbLogger:
@@ -30,6 +35,7 @@ class TestWandbLogger:
             logger.log("test_metric", 1.0, step=0)
             logger.close()
 
+    @pytest.mark.skipif(not _WANDB_AVAILABLE, reason="wandb not installed")
     @patch("agentick.training.logger.MultiBackendLogger._try_import_wandb")
     @patch("wandb.init")
     @patch("wandb.log")

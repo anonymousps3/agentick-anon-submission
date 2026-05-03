@@ -1,6 +1,7 @@
 """EVERY example must at least import without errors.
 Examples that don't need API keys must run to completion."""
 
+import importlib
 import subprocess
 from pathlib import Path
 
@@ -13,6 +14,10 @@ API_EXAMPLES = {"openai", "anthropic", "compare_llms", "cot_agent"}
 GPU_EXAMPLES = {"sft_with_trl", "huggingface_local"}
 # Examples that need long training — test import only
 TRAINING_EXAMPLES = {"ppo_cleanrl", "dqn_cleanrl", "sb3_ppo", "sb3_dqn", "curriculum", "ppo_pixels", "dqn_pixels"}
+# Examples that need optional extras (torch, etc.)
+_TORCH_AVAILABLE = importlib.util.find_spec("torch") is not None
+OPTIONAL_DEP_EXAMPLES = {"ppo_cleanrl", "dqn_cleanrl", "sb3_ppo", "sb3_dqn", "curriculum",
+                         "ppo_pixels", "dqn_pixels", "sft_with_trl", "huggingface_local"}
 
 
 def get_all_examples():
@@ -29,6 +34,10 @@ def should_skip_execution(example: Path) -> bool:
 @pytest.mark.parametrize("example", get_all_examples(), ids=lambda p: str(p))
 def test_example_imports(example):
     """Every example must import without ModuleNotFoundError."""
+    # Skip examples that need optional deps (torch, etc.) when not installed
+    if not _TORCH_AVAILABLE and example.stem in OPTIONAL_DEP_EXAMPLES:
+        pytest.skip(f"Skipping {example.stem}: torch not installed (install with --extra rl)")
+
     result = subprocess.run(
         ["uv", "run", "python", "-c",
          f"import importlib.util; "

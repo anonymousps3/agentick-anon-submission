@@ -8,6 +8,8 @@ from pathlib import Path
 
 import pytest
 
+pytest.importorskip("matplotlib", reason="matplotlib not installed (install with --extra viz)")
+
 from agentick.visualization.experiment_plots import ExperimentPlotter
 
 
