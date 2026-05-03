@@ -50,7 +50,7 @@ wandb/
 leaderboard_site/
 /site/
 trajectories/
-data/
+/data/
 test_output/
 *.pkl
 *.h5
