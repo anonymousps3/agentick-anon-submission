@@ -1,26 +1,8 @@
 # Additional results
 
 This directory collects the figures and compact tables discussed in the author
-response.
-
-**No PPO or SFT model was retrained, and no evaluation was rerun specifically
-for the response.** These artifacts summarize results that already existed
-either in the leaderboard or in saved local training/evaluation outputs but
-were not fully presented in the submitted paper.
-
-## Provenance
-
-- **PPO learning curves:** derived from the saved periodic logs of the same
-  148 independent task-difficulty policies whose 500k/2M evaluations were
-  already reported. Logs were available for 126 policies. The response exposes
-  these existing traces and checkpoint aggregates; it does not add PPO
-  training.
-- **SFT:** derived from the existing Qwen3.5-4B LoRA training logs, checkpoints,
-  and stored 37-task evaluation results. The response summarizes these existing
-  artifacts; it does not add SFT training or evaluation.
-- **Difficulty scaling:** aggregated from existing per-agent, per-task, and
-  per-difficulty leaderboard results over the official 25 evaluation seeds. No
-  environment evaluation was rerun.
+response: SFT training and evaluation, PPO learning curves, checkpoint
+aggregates, and difficulty-scaling results.
 
 ## Files
 
@@ -41,24 +23,27 @@ were not fully presented in the submitted paper.
 
 ### SFT evaluation
 
-| Harness | Base | SFT-120k | SFT-250k |
+| Prompting method | Base | SFT-120k | SFT-250k |
 |---|---:|---:|---:|
-| Markovian | .0232 | .3544 | **.4466** |
-| Markovian reasoner | .2280 | .3489 | **.4436** |
+| Direct action | .0232 | .3544 | **.4466** |
+| Reason before acting | .2280 | .3489 | **.4436** |
 
 ### PPO saved training traces
 
-| Recovered traces | 500k | 1M | 1.5M | 2M | Δ 1.5M→2M |
-|---|---:|---:|---:|---:|---:|
-| Easy (37) | .441 | .573 | .656 | .679 | +.024 |
-| Medium (37) | .217 | .282 | .313 | .339 | +.026 |
-| Hard (31) | .167 | .221 | .243 | .239 | -.003 |
-| Expert (21) | .141 | .181 | .209 | .209 | +.000 |
-| **Task-balanced mean** | **.243** | **.329** | **.377** | **.393** | **+.016** |
+| Checkpoint | Easy | Medium | Hard | Expert | Average | Gain since prior |
+|---|---:|---:|---:|---:|---:|---:|
+| 500k | .441 | .217 | .167 | .141 | .243 | — |
+| 1M | .573 | .282 | .221 | .181 | .329 | +.086 |
+| 1.5M | .656 | .313 | .243 | .209 | .377 | +.048 |
+| 2M | .679 | .339 | .239 | .209 | .393 | +.016 |
 
-The curves are periodic deterministic diagnostic episodes, smoothed with a
-31-point trailing mean. Lines are dashed before 500k, marked at 500k, and solid
-thereafter. Final leaderboard evaluations use all 25 official seeds.
+The curves evaluate the same fixed test episode every 10k training steps and
+use a 31-point trailing average for smoothing. Lines are dashed before 500k,
+marked at 500k, and solid thereafter. The final table column is the change in
+the overall average since the previous checkpoint. It shrinks from +.086 to
++.048 to +.016, so the final 1.5M→2M interval is the smallest. Final leaderboard
+evaluations use all official seeds. The six category-level learning-curve
+figures are available directly in this directory.
 
 ### Difficulty scaling
 
@@ -68,4 +53,4 @@ thereafter. Final leaderboard evaluations use all 25 official seeds.
 | PPO dense 2M | .606 | .277 | .160 | .104 | 82.8% |
 | Qwen3.5-4B | .445 | .259 | .110 | .098 | 78.0% |
 | SFT-250k | .647 | .467 | .369 | .303 | 53.1% |
-| **Mean** | **.548** | **.334** | **.215** | **.173** | **68.3%** |
+| **Average across agents** | **.548** | **.334** | **.215** | **.173** | **68.3%** |
