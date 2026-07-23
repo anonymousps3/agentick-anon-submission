@@ -445,7 +445,7 @@ hardBar('chart-hard-reason', 'Reasoning — Hard Difficulty',
 
 ### Full Benchmark Overview
 
-For agents with complete evaluations across all tasks and difficulties, we can compute Oracle-Normalized Scores (ONS).
+For agents with complete evaluations across all tasks and difficulties, we can compute Oracle-Normalized Scores (ONS). The latest snapshot contains 31 agent and reference configurations and 108,550 completed evaluation episodes.
 
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 1.5em 0;">
 <div style="flex: 1; min-width: 300px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px;">
@@ -458,10 +458,10 @@ For agents with complete evaluations across all tasks and difficulties, we can c
 
 <script>
 (() => {
-// ONS bar chart — best config per model only
-const agents = ['GPT-5 mini', 'PPO Dense (2M)', 'Qwen3.5-4B', 'Gemini 2.5 FL', 'Qwen3.5-2B', 'Qwen3.5-0.8B', 'Qwen3-4B'];
-const ons = [28.0, 25.2, 18.0, 13.0, 6.3, 1.5, 0.3];
-const barColors = ['#4a90d9', '#50b860', '#d94a8a', '#e8a838', '#d96aa5', '#e48cb8', '#bc8cff'];
+// ONS bar chart — best config per agent/checkpoint
+const agents = ['Qwen3.5-4B (SFT-250k)', 'Qwen3.5-4B (SFT-120k)', 'GPT-5 mini', 'PPO Dense (2M)', 'Qwen3.5-4B', 'PPO Dense (500k)', 'Gemini 2.5 FL', 'Qwen3.5-2B', 'Qwen3.5-0.8B', 'Qwen3-4B'];
+const ons = [44.7, 35.4, 30.9, 28.7, 22.8, 22.6, 18.7, 13.3, 9.4, 8.5];
+const barColors = ['#50b860', '#a3d990', '#4a90d9', '#7eb4e3', '#d94a8a', '#e48cb8', '#e8a838', '#d96aa5', '#bc8cff', '#94a3b8'];
 new Chart(document.getElementById('chart-ons-bar'), {
   type: 'bar',
   data: {
@@ -472,7 +472,7 @@ new Chart(document.getElementById('chart-ons-bar'), {
     indexAxis: 'y', responsive: true,
     plugins: { legend: { display: false }, tooltip: { padding: 10, cornerRadius: 6, callbacks: { label: ctx => ctx.raw.toFixed(1) + '% ONS' } }, title: { display: true, text: 'Overall ONS (%)', font: { size: 14, weight: '600' }, padding: { bottom: 12 } } },
     scales: {
-      x: { min: -10, max: 35, grid: { color: '#e1e4e833' }, border: { color: '#d0d0d0' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
+      x: { min: 0, max: 50, grid: { color: '#e1e4e833' }, border: { color: '#d0d0d0' }, ticks: { callback: v => v + '%', font: { size: 10 } } },
       y: { grid: { display: false }, border: { color: '#d0d0d0' }, ticks: { font: { size: 11, weight: '600' } } },
     },
   },
@@ -480,11 +480,11 @@ new Chart(document.getElementById('chart-ons-bar'), {
 // Radar chart — max 100 to show correct proportions
 const catLabels = ['Navigation', 'Planning', 'Reasoning', 'Memory', 'Generalization', 'Multi-Agent'];
 const radarData = [
-  { name: 'GPT-5 mini', data: [44.5, 23.7, 13.4, 26.7, 41.8, 18.1], color: '#4a90d9' },
-  { name: 'PPO Dense (2M)', data: [22.5, 32.4, 19.6, 19.1, 1.9, 60.7], color: '#50b860' },
-  { name: 'Qwen3.5-4B', data: [19.5, 21.0, 12.6, 15.1, 25.7, 15.7], color: '#d94a8a' },
-  { name: 'Gemini 2.5 FL', data: [21.1, 12.7, 9.1, 5.2, 19.9, 10.3], color: '#e8a838' },
-  { name: 'Qwen3.5-2B', data: [10.3, 11.1, 4.6, 11.0, -2.4, 0.3], color: '#d96aa5' },
+  { name: 'Qwen3.5-4B (SFT-250k)', data: [56.8, 55.7, 44.5, 41.2, 35.0, 34.8], color: '#50b860' },
+  { name: 'GPT-5 mini', data: [45.6, 33.4, 13.1, 34.8, 43.7, 15.0], color: '#4a90d9' },
+  { name: 'PPO Dense (2M)', data: [25.0, 40.2, 19.1, 28.2, 16.3, 43.2], color: '#7eb4e3' },
+  { name: 'Qwen3.5-4B', data: [22.2, 31.3, 12.4, 24.8, 32.7, 13.4], color: '#d94a8a' },
+  { name: 'Gemini 2.5 FL', data: [23.8, 24.9, 9.0, 16.2, 28.7, 9.8], color: '#e8a838' },
 ];
 new Chart(document.getElementById('chart-ons-radar'), {
   type: 'radar',
@@ -582,7 +582,7 @@ The pattern is striking: **the reasoning harness consistently multiplies perform
 
 ### Category Breakdown
 
-ONS across all six capability categories for the three fully-evaluated agents.
+ONS across all six capability categories for representative complete evaluations.
 
 <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 1.5em 0;">
 <div style="flex: 1; min-width: 280px; background: #f8f9fa; border: 1px solid #e1e4e8; border-radius: 8px; padding: 16px;">
@@ -614,29 +614,54 @@ function catBar(id, title, labels, values, colors) {
     type: 'bar', data: { labels, datasets: [{ data: values, backgroundColor: colors.map(c=>c+'cc'), borderColor: colors, borderWidth: 1.5, borderRadius: 4 }] },
     options: { indexAxis: 'y', responsive: true,
       plugins: { legend: { display: false }, tooltip: { padding: 8, cornerRadius: 6, callbacks: { label: ctx => ctx.raw.toFixed(1) + '% ONS' } }, title: { display: true, text: title, font: { size: 13, weight: '600' }, padding: { bottom: 8 } } },
-      scales: { x: { min: -5, max: 55, grid: { color: '#e1e4e822' }, border: { color: '#d0d0d0' }, ticks: { callback: v => v + '%', font: { size: 9 } } }, y: { grid: { display: false }, border: { color: '#d0d0d0' }, ticks: { font: { size: 10, weight: '600' } } } },
+      scales: { x: { min: 0, max: 65, grid: { color: '#e1e4e822' }, border: { color: '#d0d0d0' }, ticks: { callback: v => v + '%', font: { size: 9 } } }, y: { grid: { display: false }, border: { color: '#d0d0d0' }, ticks: { font: { size: 10, weight: '600' } } } },
     },
   });
 }
-const a = ['GPT-5 mini','PPO Dense (2M)','Qwen3.5-4B','Gemini 2.5 FL','Qwen3.5-2B'];
-const c = ['#4a90d9','#50b860','#d94a8a','#e8a838','#d96aa5'];
-catBar('chart-cat-nav', 'Navigation', a, [44.5, 22.5, 19.5, 21.1, 10.3], c);
-catBar('chart-cat-plan', 'Planning', a, [23.7, 32.4, 21.0, 12.7, 11.1], c);
-catBar('chart-cat-reason', 'Reasoning', a, [13.4, 19.6, 12.6, 9.1, 4.6], c);
-catBar('chart-cat-mem', 'Memory', a, [26.7, 19.1, 15.1, 5.2, 11.0], c);
-catBar('chart-cat-gen', 'Generalization', a, [41.8, 1.9, 25.7, 19.9, -2.4], c);
-catBar('chart-cat-multi', 'Multi-Agent', a, [18.1, 60.7, 15.7, 10.3, 0.3], c);
+const a = ['Qwen3.5-4B (SFT-250k)','GPT-5 mini','PPO Dense (2M)','Qwen3.5-4B','Gemini 2.5 FL','Qwen3.5-2B'];
+const c = ['#50b860','#4a90d9','#7eb4e3','#d94a8a','#e8a838','#d96aa5'];
+catBar('chart-cat-nav', 'Navigation', a, [56.8, 45.6, 25.0, 22.2, 23.8, 13.6], c);
+catBar('chart-cat-plan', 'Planning', a, [55.7, 33.4, 40.2, 31.3, 24.9, 23.7], c);
+catBar('chart-cat-reason', 'Reasoning', a, [44.5, 13.1, 19.1, 12.4, 9.0, 4.8], c);
+catBar('chart-cat-mem', 'Memory', a, [41.2, 34.8, 28.2, 24.8, 16.2, 21.2], c);
+catBar('chart-cat-gen', 'Generalization', a, [35.0, 43.7, 16.3, 32.7, 28.7, 13.3], c);
+catBar('chart-cat-multi', 'Multi-Agent', a, [34.8, 15.0, 43.2, 13.4, 9.8, 3.2], c);
 })();
 </script>
 
-<!-- PLACEHOLDER: Category analysis text will be added here -->
+The per-category view is diagnostic: SFT-250k leads navigation, planning,
+reasoning, and memory; GPT-5 mini still leads generalization; and PPO still
+leads multi-agent. The overall ranking therefore does not erase the different
+transfer and interaction profiles exposed by the benchmark.
+
+### SFT on Oracle Trajectories
+
+We LoRA-fine-tuned Qwen3.5-4B for two epochs on 120k or 250k per-step
+state-action examples generated by Agentick's oracle policies. Each checkpoint
+uses the same ASCII interface and official 37-task, four-difficulty,
+25-seed evaluation protocol as the base model.
+
+| Harness | Base Qwen3.5-4B | SFT-120k | SFT-250k |
+|---|---:|---:|---:|
+| Markovian | 2.32% | 35.44% | **44.66%** |
+| Markovian reasoner | 22.80% | 34.89% | **44.36%** |
+
+![Qwen3.5-4B SFT training loss](../../assets/rebuttal/sft_training_loss.png)
+
+![SFT evaluation improvement](../../assets/rebuttal/sft_eval_improvement.png)
+
+The similar Markovian and Reasoner endpoints after SFT suggest that the
+state-to-action oracle data teaches a direct policy rather than depending on
+the inference-time reasoning scaffold. Full training diagnostics, difficulty
+breakdowns, and PPO learning curves are collected on the
+[additional training results page](../../rebuttal-results.md).
 
 ## What's Next
 
 <!-- PLACEHOLDER: Detailed what's next content will be added -->
 
 - **More evaluations** — open-source models are being evaluated across the full benchmark
-- **Fine-tuning** — SFT datasets available on HuggingFace (<a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-120k" target="_blank">120k</a>, <a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-250k" target="_blank">250k</a>, <a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-500k" target="_blank">500k</a> episodes). RL post-training support coming soon.
+- **Fine-tuning** — SFT datasets are available on HuggingFace (<a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-120k" target="_blank">120k</a>, <a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-250k" target="_blank">250k</a>, <a href="https://huggingface.co/anon-paper-submission/agentick-oracle-trajectories-500k" target="_blank">500k</a> per-step rows), with 120k/250k results reported above.
 - **VLM evaluation** — pixel observation benchmarks for vision-language models
 - **Better RL baselines** — longer training, curriculum learning, multi-task agents
 - **New tasks** — community contributions welcome

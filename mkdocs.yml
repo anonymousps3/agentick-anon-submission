@@ -26,6 +26,7 @@ nav:
     - Fine-Tuning: agents/finetuning.md
   - Experiments: experiments.md
   - Leaderboard: leaderboard.md
+  - Additional Results: rebuttal-results.md
   - Architecture: concepts/architecture.md
   - CLI: cli.md
 
