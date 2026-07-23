@@ -646,9 +646,7 @@ uses the same ASCII interface and official 37-task, four-difficulty,
 | Markovian | 2.32% | 35.44% | **44.66%** |
 | Markovian reasoner | 22.80% | 34.89% | **44.36%** |
 
-![Qwen3.5-4B SFT training loss](../../assets/rebuttal/sft_training_loss.png)
-
-![SFT evaluation improvement](../../assets/rebuttal/sft_eval_improvement.png)
+![SFT training curves and evaluation results](../../assets/rebuttal/sft_results_combined.png)
 
 The similar Markovian and Reasoner endpoints after SFT suggest that the
 state-to-action oracle data teaches a direct policy rather than depending on

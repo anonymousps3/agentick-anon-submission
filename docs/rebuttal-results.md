@@ -16,9 +16,7 @@ corresponding base-model results.
 | Markovian | 0.0232 | 0.3544 | **0.4466** |
 | Markovian reasoner | 0.2280 | 0.3489 | **0.4436** |
 
-![Qwen3.5-4B SFT training loss](assets/rebuttal/sft_training_loss.png)
-
-![SFT evaluation improvement](assets/rebuttal/sft_eval_improvement.png)
+![SFT training curves and evaluation results](assets/rebuttal/sft_results_combined.png)
 
 ## Difficulty scaling validation
 
@@ -28,23 +26,19 @@ while easy through expert jointly scale task-relevant axes such as grid size,
 object or constraint count, stochasticity, and horizon. The axes and four
 parameter presets are benchmark design choices.
 
-The table reports mean success over all tasks in each category and 25 official
-evaluation seeds per task-difficulty pair. Each cell is
-easy/medium/hard/expert.
+The compact table reports capability-balanced mean success across all 37 tasks
+and 25 official seeds per task-difficulty pair.
 
-| Category | GPT-5 mini | PPO dense 2M | Qwen3.5-4B | SFT-250k |
-|---|---:|---:|---:|---:|
-| Navigation | .675/.520/.400/.230 | .600/.250/.090/.060 | .495/.295/.085/.015 | .785/.600/.495/.390 |
-| Planning | .680/.351/.178/.129 | .876/.391/.227/.116 | .556/.436/.156/.107 | .836/.604/.462/.324 |
-| Reasoning | .155/.135/.130/.105 | .365/.150/.125/.125 | .345/.100/.030/.020 | .595/.425/.400/.360 |
-| Memory | .540/.400/.170/.280 | .670/.310/.080/.070 | .460/.240/.080/.210 | .560/.430/.290/.370 |
-| Generalization | .547/.440/.387/.373 | .333/.187/.080/.053 | .413/.373/.293/.227 | .467/.320/.333/.280 |
-| Multi-agent | .368/.144/.072/.016 | .792/.376/.360/.200 | .400/.112/.016/.008 | .640/.424/.232/.096 |
-| **Overall** | **.494/.332/.223/.189** | **.606/.277/.160/.104** | **.445/.259/.110/.098** | **.647/.467/.369/.303** |
+| Agent | Easy | Medium | Hard | Expert | Easy→Expert drop |
+|---|---:|---:|---:|---:|---:|
+| GPT-5 mini | .494 | .332 | .223 | .189 | 61.8% |
+| PPO dense 2M | .606 | .277 | .160 | .104 | 82.8% |
+| Qwen3.5-4B | .445 | .259 | .110 | .098 | 78.0% |
+| SFT-250k | .647 | .467 | .369 | .303 | 53.1% |
+| **Mean** | **.548** | **.334** | **.215** | **.173** | **68.3%** |
 
-All four overall sequences decrease strictly from easy to expert; 20/24
-agent-category sequences are monotone. The four local reversals are small-sample
-category effects rather than a failure of the overall ordering.
+Every agent degrades strictly from easy to expert. Averaged across four
+distinct training/evaluation regimes, success falls from .548 to .173 (68.3%).
 
 ## PPO learning curves
 
@@ -57,11 +51,20 @@ from 500k to 2M steps and dashed before 500k, with a marker at the 500k
 checkpoint. The y-axis is the periodic evaluation success rate, smoothed with
 a 31-point trailing rolling mean so the 500k marker uses no post-500k data.
 
-Across the 37 task-level aggregates, the median absolute change between the
-1.2M–1.6M and 1.6M–2M windows is 0.0125 success-rate units (mean 0.0221);
-32/37 are within 0.05 and 36/37 are within 0.10. The periodic points are
-deterministic diagnostic episodes; final leaderboard evaluation uses all
-25 official evaluation seeds.
+| Recovered policies | 500k | 1M | 1.5M | 2M | Δ 1.5M→2M |
+|---|---:|---:|---:|---:|---:|
+| Easy (37) | .441 | .573 | .656 | .679 | +.024 |
+| Medium (37) | .217 | .282 | .313 | .339 | +.026 |
+| Hard (31) | .167 | .221 | .243 | .239 | −.003 |
+| Expert (21) | .141 | .181 | .209 | .209 | +.000 |
+| **Task-balanced mean** | **.243** | **.329** | **.377** | **.393** | **+.016** |
+
+The successive task-balanced gains shrink from +.086 to +.048 to +.016. From
+1.5M to 2M, the median task-level absolute change is .016; 32/37 task
+aggregates change by at most .05 and 36/37 by at most .10. At 2M, 17/21 tasks
+with all four recovered curves order easy ≥ medium ≥ hard ≥ expert. These are
+smoothed deterministic diagnostic episodes; final leaderboard evaluation uses
+25 official seeds.
 
 ### Navigation
 
