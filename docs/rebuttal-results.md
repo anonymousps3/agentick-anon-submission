@@ -3,6 +3,12 @@
 This page reports additional supervised fine-tuning (SFT) results and PPO
 training diagnostics for Agentick.
 
+No PPO or SFT model was retrained, and no evaluation was rerun specifically
+for the author response. These figures and tables summarize existing
+leaderboard records and saved local training/evaluation artifacts that were not
+fully presented in the submitted paper. The compact source tables and
+provenance notes are collected in `additional_results/` at the repository root.
+
 ## Supervised fine-tuning
 
 We LoRA-fine-tune Qwen3.5-4B on per-step state-action examples from the

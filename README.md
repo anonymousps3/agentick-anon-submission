@@ -190,6 +190,7 @@ uv run agentick info GoToGoal-v0 # Task details
 
 ## Documentation
 
+- [Additional results and provenance](additional_results/README.md)
 - [Quickstart](docs/getting_started/quickstart.md)
 - [Tasks](docs/tasks.md)
 - [Observations](docs/concepts/observations.md)
@@ -212,6 +213,7 @@ agentick/
 │   ├── training/          # SFT trainer (TRL)
 │   └── human/             # Web showcase and human play
 ├── examples/              # Runnable examples
+├── additional_results/    # Author-response figures, tables, and provenance
 ├── docs/                  # Documentation + showcase gallery
 └── tests/                 # Test suite
 ```
