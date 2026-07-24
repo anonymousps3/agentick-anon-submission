@@ -1,0 +1,5 @@
+Observation,500k,1M,1.5M,2M,Matched traces,Matched tasks
+"PPO, pixels (CNN, dense, 2M)",0.243243,0.328756,0.376925,0.392546,126,37
+"PPO, grid-state vector (MLP, dense, 2M)",0.192677,0.208442,0.214037,0.220139,126,37
+"PPO, ASCII (byte CNN, dense, 2M)",0.161508,0.302892,0.336457,0.369369,126,37
+"PPO, natural language (byte CNN, dense, 2M)",0.269180,0.341761,0.363775,0.363702,126,37

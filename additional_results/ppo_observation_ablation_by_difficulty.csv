@@ -1,0 +1,5 @@
+Observation,Easy,Medium,Hard,Expert
+"PPO, pixels (CNN, dense, 2M)",0.486486,0.176216,0.077838,0.044324
+"PPO, grid-state vector (MLP, dense, 2M)",0.182703,0.121081,0.070270,0.035676
+"PPO, ASCII (byte CNN, dense, 2M)",0.393514,0.210811,0.107027,0.056216
+"PPO, natural language (byte CNN, dense, 2M)",0.378378,0.219459,0.072432,0.083243

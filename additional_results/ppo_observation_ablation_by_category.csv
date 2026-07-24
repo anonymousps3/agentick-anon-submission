@@ -1,0 +1,5 @@
+Observation,Overall,Navigation,Planning,Reasoning,Memory,Generalization,Multi-agent
+"PPO, pixels (CNN, dense, 2M)",0.196216,0.225000,0.294444,0.010000,0.280000,0.166667,0.222000
+"PPO, grid-state vector (MLP, dense, 2M)",0.102432,0.110000,0.064444,0.086250,0.082500,0.113333,0.194000
+"PPO, ASCII (byte CNN, dense, 2M)",0.191892,0.211250,0.270000,0.085000,0.232500,0.133333,0.194000
+"PPO, natural language (byte CNN, dense, 2M)",0.188378,0.198750,0.303333,0.033750,0.250000,0.120000,0.204000
