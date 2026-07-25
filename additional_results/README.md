@@ -2,7 +2,31 @@
 
 This directory contains compact, machine-readable results and figures added for
 the author response: supervised fine-tuning, PPO observation ablations, PPO
-learning diagnostics, and difficulty scaling.
+learning diagnostics, difficulty scaling, and a native VLM baseline.
+
+## Qwen3.5-4B native VLM baseline
+
+We evaluated the base, non-SFT Qwen3.5-4B model through its native vision
+tower using Agentick's 512x512 synchronized pixel rendering. This is the same
+Markovian direct-action harness and sampling configuration as the ASCII
+baseline; only the observation changes. Both rows cover all 37 tasks, four
+difficulties, and the same 25 official evaluation seeds per task-difficulty
+cell.
+
+| Agent | Observation | Easy | Medium | Hard | Expert | Overall |
+|---|---|---:|---:|---:|---:|---:|
+| Qwen3.5-4B, direct action | ASCII | .050 | .032 | .007 | .003 | .023 |
+| Qwen3.5-4B, direct action | Pixels | .220 | .084 | .031 | .038 | .093 |
+
+Difficulty columns average the six capability-category means for that
+difficulty; Overall is the official category-balanced Agentick score. The
+pixel result is .050 navigation, .147 planning, .013 reasoning, .135 memory,
+.160 generalization, and .056 multi-agent.
+
+Machine-readable sources:
+[difficulty and overall table](qwen35_4b_vlm_summary.csv),
+[category table](qwen35_4b_vlm_category_summary.csv), and
+[ready-to-paste Markdown](qwen35_4b_vlm_summary.md).
 
 ## PPO observation ablation
 

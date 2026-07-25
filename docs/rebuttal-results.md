@@ -1,9 +1,29 @@
 # Additional Training Results
 
 This page reports additional supervised fine-tuning (SFT) results, difficulty
-analysis, and PPO training diagnostics for Agentick. The figures and compact
-source tables are also collected in `additional_results/` at the repository
-root.
+analysis, PPO training diagnostics, and a native VLM baseline for Agentick.
+The figures and compact source tables are also collected in
+`additional_results/` at the repository root.
+
+## Qwen3.5-4B native VLM baseline
+
+We evaluated the base, non-SFT Qwen3.5-4B model through its native vision
+tower on Agentick's 512x512 synchronized pixel observations. We held the
+Markovian direct-action harness, task descriptions, action space, sampling
+configuration, and 25 official evaluation seeds per task-difficulty cell
+fixed relative to the ASCII baseline.
+
+| Agent | Observation | Easy | Medium | Hard | Expert | Overall |
+|---|---|---:|---:|---:|---:|---:|
+| Qwen3.5-4B, direct action | ASCII | .050 | .032 | .007 | .003 | .023 |
+| Qwen3.5-4B, direct action | Pixels | .220 | .084 | .031 | .038 | .093 |
+
+Difficulty columns are category-balanced across navigation, planning,
+reasoning, memory, generalization, and multi-agent tasks. The pixel VLM's
+category averages are .050, .147, .013, .135, .160, and .056, respectively;
+its official overall score is .093 (95% CI: .046-.137). The full-precision
+source tables are in `additional_results/qwen35_4b_vlm_summary.csv` and
+`additional_results/qwen35_4b_vlm_category_summary.csv`.
 
 ## Supervised fine-tuning
 
